@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const apartmentSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Owner',
+    ref: 'OwnerProfile',
     required: true,
   },
   title: { type: String, required: true },

@@ -1,13 +1,11 @@
-import { Router } from 'express';
-import { createOrUpdateProfile, getProfile } from '../controllers/owners.controller.js';
-import { protect, requireRole } from '../middleware/auth.js';
+// File: backend/src/routes/owners.routes.js
 
+import express from 'express';
+import { createOrUpdateProfile } from '../controllers/owners.controller.js';
+import { protect } from '../middleware/auth.middleware.js';
 
-const router = Router();
+const router = express.Router();
 
-
-router.post('/profile', protect, requireRole(['owner']), createOrUpdateProfile);
-router.get('/profile', protect, requireRole(['owner']), getProfile);
-
+router.post('/', protect, createOrUpdateProfile);
 
 export default router;

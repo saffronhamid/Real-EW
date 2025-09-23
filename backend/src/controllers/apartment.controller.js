@@ -60,3 +60,32 @@ export const deleteApartment = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete apartment', error: err.message });
   }
 };
+export const getMyApartments = async (req, res) => {
+  try {
+    const apartments = await Apartment.find({ owner: req.user._id });
+    res.json(apartments);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch your apartments', error: err.message });
+  }
+};
+export const verifyApartmentStatus = async (req, res) => {
+  const { status } = req.body;
+
+  if (!["Verified", "Rejected"].includes(status)) {
+    return res.status(400).json({ message: "Invalid status value" });
+  }
+
+  try {
+    const apartment = await Apartment.findById(req.params.id);
+    if (!apartment) {
+      return res.status(404).json({ message: "Apartment not found" });
+    }
+
+    apartment.verificationStatus = status;
+    await apartment.save();
+
+    res.json({ message: `Apartment ${status.toLowerCase()} successfully`, apartment });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to verify apartment", error: err.message });
+  }
+};
