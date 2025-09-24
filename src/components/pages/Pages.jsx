@@ -1,15 +1,17 @@
-import React from "react"
-import Header from "../common/header/Header"
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
-import Home from "../home/Home"
-import Footer from "../common/footer/Footer"
-import About from "../about/About"
-import Pricing from "../pricing/Pricing"
-import Blog from "../blog/Blog"
-import Services from "../services/Services"
-import Contact from "../contact/Contact"
-import OwnerDashboard from "../components/owner/OwnerDashboard";
+import React from "react";
+import Header from "../common/header/Header";
+import Footer from "../common/footer/Footer";
+import Home from "../home/Home";
+import About from "../about/About";
+import Pricing from "../pricing/Pricing";
+import Blog from "../blog/Blog";
+import Services from "../services/Services";
+import Contact from "../contact/Contact";
+import OwnerDashboard from '../owner/OwnerDashboard';
+import OwnerLogin from "../owner/OwnerLogin";
 
+
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const Pages = () => {
   return (
@@ -23,13 +25,15 @@ const Pages = () => {
           <Route exact path='/blog' component={Blog} />
           <Route exact path='/pricing' component={Pricing} />
           <Route exact path='/contact' component={Contact} />
-          <Route path="/owner/dashboard" element={<OwnerDashboard />} />
+        
+          <Route exact path='/owner/dashboard' component={OwnerDashboard} /> {/* ✅ This line fixes it */}
+          <Route exact path="/owner/login" component={OwnerLogin} />
 
         </Switch>
         <Footer />
       </Router>
     </>
-  )
-}
+  );
+};
 
-export default Pages
+export default Pages;
