@@ -9,27 +9,31 @@ import Services from "../services/Services";
 import Contact from "../contact/Contact";
 import OwnerDashboard from '../owner/OwnerDashboard';
 import OwnerLogin from "../owner/OwnerLogin";
+import OwnerProfileForm from '../owner/OwnerProfileForm';
 
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const Pages = () => {
   return (
     <>
       <Router>
         <Header />
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route exact path='/about' component={About} />
-          <Route exact path='/services' component={Services} />
-          <Route exact path='/blog' component={Blog} />
-          <Route exact path='/pricing' component={Pricing} />
-          <Route exact path='/contact' component={Contact} />
-        
-          <Route exact path='/owner/dashboard' component={OwnerDashboard} /> {/* ✅ This line fixes it */}
-          <Route exact path="/owner/login" component={OwnerLogin} />
+        <Routes>
+  <Route path='/' element={<Home />} />
+  <Route path='/about' element={<About />} />
+  <Route path='/services' element={<Services />} />
+  <Route path='/blog' element={<Blog />} />
+  <Route path='/pricing' element={<Pricing />} />
+  <Route path='/contact' element={<Contact />} />
+  <Route path='/dashboard' element={<OwnerDashboard />} />
+  <Route path="/owner/login" element={<OwnerLogin />} />
+  <Route path="/owner/profile" element={<OwnerProfileForm />} />
 
-        </Switch>
+
+</Routes>
+
         <Footer />
       </Router>
     </>

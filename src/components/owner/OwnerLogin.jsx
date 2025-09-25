@@ -1,62 +1,55 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useHistory } from "react-router-dom";
+// src/components/owner/OwnerLogin.jsx
+
+import React from 'react';
+import axios from 'axios'; 
+import { signInWithPopup } from 'firebase/auth';
+import { auth, provider } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
 
 const OwnerLogin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleGoogleLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
 
-    try {
-      const res = await axios.post("http://localhost:5000/api/users/login", {
-        email,
-        password,
-      });
+    console.log("✅ Google user:", user);
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+    // 🔥 Send user info to your backend
+    const { data } = await axios.post('http://localhost:5000/api/owners/google-login', {
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL,
+      uid: user.uid
+    });
 
-      // Redirect after login
-      history.push("/owner/dashboard");
-    } catch (err) {
-      alert("Login failed: " + (err.response?.data?.message || "Unknown error"));
-    }
-  };
+    // ✅ Store the JWT token
+    localStorage.setItem('token', data.token);
+
+    alert(`Welcome, ${data.user.name}!`);
+
+    // ⏩ Redirect to dashboard
+    navigate('/owner/dashboard');
+  } catch (error) {
+    console.error("❌ Google login failed:", error);
+    alert("Google Sign-in failed: " + error.message);
+  }
+};
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-6 rounded shadow-md w-full max-w-sm"
-      >
-        <h2 className="text-2xl font-bold mb-4">Owner Login</h2>
+      <div className="bg-white p-10 rounded shadow-md">
+        <h2 className="text-2xl font-bold mb-6">Owner Login</h2>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full mb-3 p-2 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full mb-4 p-2 border rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
+        {/* Google Button */}
         <button
-          type="submit"
-          className="w-full bg-green-600 hover:bg-green-700 text-white p-2 rounded"
+          onClick={handleGoogleLogin}
+          className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition"
         >
-          Login
+          Sign in with Google
         </button>
-      </form>
+      </div>
     </div>
   );
 };
